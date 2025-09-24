@@ -1,0 +1,6 @@
+langchain
+langchain-experimental
+langchain-community
+huggingface_hub
+streamlit
+pandas
