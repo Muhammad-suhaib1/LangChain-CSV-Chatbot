@@ -1,7 +1,5 @@
 import os
 import streamlit as st
-import pandas as pd
-from langchain.agents import create_csv_agent
 from langchain_community.llms import HuggingFaceHub
 
 st.title("CSV Q&A — Company Funding Data")
@@ -40,5 +38,6 @@ if uploaded_file:
                 st.write(answer)
             except Exception as e:
                 st.error(f"Error: {e}")
+
 
 
