@@ -1,6 +1,6 @@
-langchain
-langchain-experimental
-langchain-community
-huggingface_hub
 streamlit
 pandas
+langchain==0.1.20
+langchain-community==0.0.38
+langchain-experimental==0.0.25
+huggingface_hub==0.20.3
