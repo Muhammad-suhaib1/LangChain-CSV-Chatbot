@@ -19,8 +19,9 @@ if uploaded_file:
 
     # ✅ Load Hugging Face model (no extra token arg)
     llm = HuggingFaceHub(
-        repo_id="google/flan-t5-large",
-        model_kwargs={"temperature": 0.0, "max_length": 512}
+    repo_id="google/flan-t5-large",
+    task="text2text-generation",   # 👈 add this line
+    model_kwargs={"temperature": 0.0, "max_length": 512}
     )
 
     # Create CSV agent
@@ -40,3 +41,4 @@ if uploaded_file:
                 st.write(answer)
             except Exception as e:
                 st.error(f"Error: {e}")
+
