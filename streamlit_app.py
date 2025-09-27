@@ -4,41 +4,38 @@ import pandas as pd
 from langchain.agents import create_csv_agent
 from langchain.llms import HuggingFaceHub
 
-st.title("CSV Q&A — Company Funding Data")
-
-# File uploader
-uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
+import tempfile
 
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
     st.write("Preview of your data:")
     st.dataframe(df.head())
 
-    # ✅ Set Hugging Face API key properly
-    os.environ["HUGGINGFACEHUB_API_TOKEN"] = st.secrets["HUGGINGFACE_API_KEY"]
+    # Save uploaded file to a temp file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as tmp_file:
+        tmp_file.write(uploaded_file.getbuffer())
+        tmp_file_path = tmp_file.name
 
-    # ✅ Load Hugging Face model (no extra token arg)
+    # Hugging Face model
+    HUGGINGFACE_API_KEY = st.secrets["HUGGINGFACE_API_KEY"]
+
     llm = HuggingFaceHub(
-    repo_id="google/flan-t5-large",
-    task="text2text-generation",   # 👈 add this line
-    model_kwargs={"temperature": 0.0, "max_length": 512}
+        repo_id="google/flan-t5-base",  # try base first for speed
+        task="text2text-generation",
+        model_kwargs={"temperature": 0.0, "max_length": 512}
     )
 
-    # Create CSV agent
+    # Create CSV agent (now with correct file path)
     agent = create_csv_agent(
         llm,
-        uploaded_file,
+        tmp_file_path,   # 👈 pass file path, not uploaded_file
         verbose=True
     )
 
-    # Chatbot interface
+    # Chatbot part
     query = st.text_input("Ask a question about your CSV data:")
 
     if query:
         with st.spinner("Thinking..."):
-            try:
-                answer = agent.run(query)
-                st.write(answer)
-            except Exception as e:
-                st.error(f"Error: {e}")
-
+            answer = agent.run(query)
+            st.write(answer)
