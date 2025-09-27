@@ -14,13 +14,13 @@ if uploaded_file:
     st.write("Preview of your data:")
     st.dataframe(df.head())
 
-    # Load Hugging Face API key
+    # ✅ Set Hugging Face API key properly
     os.environ["HUGGINGFACEHUB_API_TOKEN"] = st.secrets["HUGGINGFACE_API_KEY"]
 
-    # Hugging Face model
+    # ✅ Load Hugging Face model (no extra token arg)
     llm = HuggingFaceHub(
         repo_id="google/flan-t5-large",
-        model_kwargs={"temperature": 0, "max_length": 512}
+        model_kwargs={"temperature": 0.0, "max_length": 512}
     )
 
     # Create CSV agent
